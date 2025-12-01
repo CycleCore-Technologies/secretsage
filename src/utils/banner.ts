@@ -11,14 +11,14 @@ ${chalk.magenta('  \\__ \\ / -_)/ _|| \'_|/ -_)|  _|\\__ \\ / _` | / _` | / -_)'
 ${chalk.magenta('  |___/ \\___|\\___|_|  \\___| \\__||___/ \\__,_| \\__, | \\___|')}
 ${chalk.magenta('                                             |___/')}
 
-${chalk.gray('  @cyclecore/secretsage')} ${chalk.dim('v0.1.0')}
+${chalk.gray('  @cyclecore/secretsage')} ${chalk.dim('v0.2.0')}
 ${chalk.gray('  The missing OAuth for LLM agents')}
 `;
 
 /**
  * Compact banner for use in command output
  */
-export const COMPACT_BANNER = `${chalk.magenta('SecretSage')} ${chalk.dim('v0.1.0')}`;
+export const COMPACT_BANNER = `${chalk.magenta('SecretSage')} ${chalk.dim('v0.2.0')}`;
 
 /**
  * Print the full banner to console

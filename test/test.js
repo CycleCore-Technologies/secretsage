@@ -65,7 +65,7 @@ function runTests() {
 
   test('--version shows version', () => {
     const output = exec(`${CLI} --version`);
-    if (!output.includes('0.1.0')) throw new Error('Missing version');
+    if (!output.includes('0.2.0')) throw new Error('Missing version');
   });
 
   // Init command
@@ -150,6 +150,79 @@ function runTests() {
     if (!output.includes('version') && !output.includes('encryption') && !output.includes('Configuration')) {
       throw new Error('Missing config output');
     }
+  });
+
+  // Remove command
+  console.log('\n\x1b[1mRemove Command\x1b[0m');
+
+  test('remove deletes credential from vault', () => {
+    // First add a credential to remove
+    exec(`${CLI} add REMOVE_TEST --value "to-be-removed"`, { cwd: TEST_DIR });
+    // Then remove it
+    exec(`${CLI} remove REMOVE_TEST --yes`, { cwd: TEST_DIR });
+    // Verify it's gone
+    const output = exec(`${CLI} list --json`, { cwd: TEST_DIR });
+    if (output.includes('REMOVE_TEST')) throw new Error('Credential not removed');
+  });
+
+  // Rotate command
+  console.log('\n\x1b[1mRotate Command\x1b[0m');
+
+  test('rotate updates credential value', () => {
+    // Add a credential
+    exec(`${CLI} add ROTATE_TEST --value "old-value"`, { cwd: TEST_DIR });
+    // Rotate it
+    exec(`${CLI} rotate ROTATE_TEST --value "new-value" --yes`, { cwd: TEST_DIR });
+    // Grant and check the new value
+    exec(`${CLI} grant ROTATE_TEST --yes`, { cwd: TEST_DIR });
+    const envPath = path.join(TEST_DIR, '.env');
+    const content = fs.readFileSync(envPath, 'utf8');
+    if (!content.includes('new-value')) throw new Error('Value not rotated');
+  });
+
+  // Export command
+  console.log('\n\x1b[1mExport Command\x1b[0m');
+
+  test('export outputs credentials as JSON', () => {
+    const output = exec(`${CLI} export --quiet`, { cwd: TEST_DIR });
+    const data = JSON.parse(output);
+    if (!Array.isArray(data)) throw new Error('Export is not an array');
+    if (data.length === 0) throw new Error('Export is empty');
+  });
+
+  test('export --format env outputs .env format', () => {
+    const output = exec(`${CLI} export --format env`, { cwd: TEST_DIR });
+    if (!output.includes('=')) throw new Error('Not .env format');
+  });
+
+  // Import command
+  console.log('\n\x1b[1mImport Command\x1b[0m');
+
+  test('import adds credentials from JSON', () => {
+    // Create a JSON file to import
+    const importData = JSON.stringify([{ name: 'IMPORT_TEST', value: 'imported-value' }]);
+    const importFile = path.join(TEST_DIR, 'import.json');
+    fs.writeFileSync(importFile, importData);
+    // Import it
+    exec(`${CLI} import -i ${importFile} --merge --yes`, { cwd: TEST_DIR });
+    // Verify
+    const output = exec(`${CLI} list --json`, { cwd: TEST_DIR });
+    if (!output.includes('IMPORT_TEST')) throw new Error('Import failed');
+  });
+
+  // Status command
+  console.log('\n\x1b[1mStatus Command\x1b[0m');
+
+  test('status shows vault info', () => {
+    const output = exec(`${CLI} status`, { cwd: TEST_DIR });
+    if (!output.includes('Vault') && !output.includes('Credentials')) throw new Error('Missing status info');
+  });
+
+  test('status --json outputs valid JSON', () => {
+    const output = exec(`${CLI} status --json`, { cwd: TEST_DIR });
+    const data = JSON.parse(output);
+    if (!data.vault) throw new Error('Missing vault info');
+    if (!data.credentials) throw new Error('Missing credentials info');
   });
 }
 

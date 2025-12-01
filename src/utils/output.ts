@@ -11,6 +11,7 @@ export const colors = {
   warning: chalk.yellow,
   info: chalk.blue,
   muted: chalk.gray,
+  dim: chalk.dim,
   highlight: chalk.magenta,
   key: chalk.cyan,
   value: chalk.white,
@@ -80,6 +81,13 @@ export function divider(): void {
  */
 export function keyValue(key: string, value: string): void {
   console.log(`  ${colors.muted(key + ':')} ${value}`);
+}
+
+/**
+ * Print a header
+ */
+export function header(text: string): void {
+  console.log(chalk.bold.white(text));
 }
 
 /**

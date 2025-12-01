@@ -11,6 +11,24 @@ import { getEnvPath } from '../config/paths';
 import * as output from '../utils/output';
 import { promptCredentialValue } from '../utils/prompts';
 
+/**
+ * Read value from stdin (for piped input)
+ */
+async function readStdin(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let data = '';
+    process.stdin.setEncoding('utf8');
+    process.stdin.on('data', (chunk) => { data += chunk; });
+    process.stdin.on('end', () => { resolve(data.trim()); });
+    process.stdin.on('error', reject);
+
+    // Handle case where stdin is a TTY (not piped)
+    if (process.stdin.isTTY) {
+      reject(new Error('No input provided via stdin. Use --value with a value or omit to use interactive prompt.'));
+    }
+  });
+}
+
 interface AddOptions {
   value?: string;
   fromEnv?: boolean;
@@ -55,6 +73,18 @@ export async function addCommand(name: string, options: AddOptions): Promise<voi
     value = env[name];
     if (!options.quiet) {
       output.info(`Importing ${name} from .env`);
+    }
+  } else if (options.value === '-') {
+    // Read from stdin
+    try {
+      value = await readStdin();
+      if (!value) {
+        output.error('Empty input received from stdin.');
+        process.exit(1);
+      }
+    } catch (error) {
+      output.error((error as Error).message);
+      process.exit(1);
     }
   } else if (options.value) {
     // Use provided value

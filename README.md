@@ -75,6 +75,7 @@ Add a credential to the encrypted vault.
 secretsage add OPENAI_API_KEY              # Prompts for value
 secretsage add API_KEY --value "sk-..."    # Provide value directly
 secretsage add DATABASE_URL --from-env     # Import from existing .env
+echo "secret" | secretsage add KEY --value -  # Read from stdin
 ```
 
 ### `secretsage list`
@@ -116,6 +117,56 @@ View or update configuration.
 secretsage config                              # Show current config
 secretsage config --path                       # Show config file path
 secretsage config --set agent.autoGitignore=false
+```
+
+### `secretsage remove <name>`
+
+Permanently delete a credential from the vault.
+
+```bash
+secretsage remove OLD_API_KEY          # Interactive confirmation
+secretsage remove OLD_API_KEY --yes    # Skip confirmation
+```
+
+### `secretsage rotate <name>`
+
+Update the value of an existing credential.
+
+```bash
+secretsage rotate OPENAI_API_KEY                    # Prompts for new value
+secretsage rotate API_KEY --value "new-sk-..."      # Provide new value directly
+echo "new-secret" | secretsage rotate KEY --value - # Read from stdin
+```
+
+### `secretsage export`
+
+Export vault credentials for backup or transfer.
+
+```bash
+secretsage export                          # Decrypted JSON to stdout
+secretsage export --encrypted              # Encrypted backup
+secretsage export --format env             # Export as .env format
+secretsage export -o backup.json           # Write to file
+```
+
+### `secretsage import`
+
+Import credentials from backup or external source.
+
+```bash
+secretsage import -i backup.json           # Import from JSON file
+secretsage import --format env -i .env     # Import from .env file
+cat backup.json | secretsage import        # Import from stdin
+secretsage import --merge -i new.json      # Merge with existing vault
+```
+
+### `secretsage status`
+
+Show vault status and health check.
+
+```bash
+secretsage status          # Human-readable status
+secretsage status --json   # Machine-readable for agents
 ```
 
 ## Agent Integration
@@ -212,4 +263,4 @@ Apache 2.0 - CycleCore Technologies
 
 ---
 
-Built with love by [CycleCore Technologies](https://cyclecore.ai)
+Created by [CycleCore Technologies](https://cyclecore.ai)
