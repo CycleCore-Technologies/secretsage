@@ -1,0 +1,75 @@
+{
+  "name": "@cyclecore/secretsage",
+  "version": "0.1.0",
+  "description": "Terminal-based credential wizard for agent-driven development. The missing OAuth for LLM agents.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "secretsage": "./cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "cli.js",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build",
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "credentials",
+    "secrets",
+    "env",
+    "encryption",
+    "age",
+    "agent",
+    "llm",
+    "cli",
+    "wizard",
+    "oauth",
+    "dotenv",
+    "security",
+    "vault"
+  ],
+  "author": "CycleCore Technologies <hi@cyclecore.ai>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyclecore-technologies/secretsage.git"
+  },
+  "homepage": "https://cyclecore.ai",
+  "bugs": {
+    "url": "https://github.com/cyclecore-technologies/secretsage/issues"
+  },
+  "dependencies": {
+    "age-encryption": "^0.2.0",
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1",
+    "yaml": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.4",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
