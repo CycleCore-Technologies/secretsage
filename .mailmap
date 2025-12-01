@@ -1,0 +1,5 @@
+# .mailmap - Maps contributor identities to clean names
+# This file makes GitHub display clean contributor names without rewriting git history
+
+# Map Lexopoly email to CycleCore identity
+CycleCore Technologies <admin@cyclecore.ai> Your Name <admin@lexopoly.com>
